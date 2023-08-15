@@ -1,20 +1,42 @@
 GET http://localhost:4001/states/
+### 1
 
-###
 
-GET http://localhost:4001/states/6
-
-###
+GET http://localhost:4001/states/4
+### 2
 POST http://localhost:4001/districts/
-Content-Type: : application/json
+Content-Type: application/json
 
 {
-    "Hi":"Hi"
+  "districtName": "Bagalkot",
+  "stateId": 3,
+  "cases": 2323,
+  "cured": 2000,
+  "active": 315,
+  "deaths": 8
 }
 
 ###
 
-GET http://localhost:4001/districts/322/
+GET http://localhost:4001/districts/11/
 
-###
-DELETE http://localhost:4001/districts/4/
+###4
+DELETE http://localhost:4001/districts/10/
+###5
+PUT http://localhost:4001/districts/11/
+Content-Type: application/json
+
+{
+  "districtName": "Nadia",
+  "stateId": "3",
+  "cases": "9628",
+  "cured": "6524",
+  "active": "3000",
+  "deaths": "104"
+}
+### 6
+
+
+GET http://localhost:4001/states/4/stats/
+
+### 7

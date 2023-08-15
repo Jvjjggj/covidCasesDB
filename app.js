@@ -3,6 +3,17 @@ const path = require("path");
 const { open } = require("sqlite");
 const sqlite3 = require("sqlite3");
 const app = express();
+const formatDistrict = function (i) {
+  return {
+    districtId: i.district_id,
+    districtName: i.district_name,
+    stateId: i.state_id,
+    cases: i.cases,
+    cured: i.cured,
+    active: i.active,
+    deaths: i.deaths,
+  };
+};
 app.use(express.json());
 const dbpath = path.join(__dirname, "covid19India.db");
 let db = null;
@@ -30,6 +41,7 @@ const format = function (i) {
   };
 };
 
+//API1
 app.get("/states/", async (request, response) => {
   const query = `select * from state
     `;
@@ -42,7 +54,7 @@ app.get("/states/", async (request, response) => {
   }
   response.send(lst);
 });
-
+//API2
 app.get("/states/:stateId/", async (request, response) => {
   const { stateId } = request.params;
 
@@ -51,32 +63,33 @@ app.get("/states/:stateId/", async (request, response) => {
   const change = format(dbresponse);
   response.send(change);
 });
-//Adding District
+//API3 Adding District
 app.post("/districts/", async (request, response) => {
   const districtDetails = request.body;
   //https://github.com/Jvjjggj/covidCasesDB.git
-  response.send(districtDetails);
+  const {
+    districtName,
+    stateId,
+    cases,
+    cured,
+    active,
+    deaths,
+  } = districtDetails;
+  const query = `
+  insert into district (district_name,state_id,cases,cured,active,deaths)
+  values("${districtName}",${stateId},${cases},${cured},${active},${deaths})`;
+  response.send("District Successfully Added");
 });
-
-const formatDistrict = function (i) {
-  return {
-    districtId: i.district_id,
-    districtName: i.district_name,
-    stateId: i.state_id,
-    cases: i.cases,
-    cured: i.cured,
-    active: i.active,
-    deaths: i.deaths,
-  };
-};
 
 //API4 Get district with DistrictId
 app.get("/districts/:districtId/", async (request, response) => {
   const { districtId } = request.params;
-  const query = `select * from district where district_id=${districtId}`;
-  const dbresponse = await db.get(query);
+  const query = `
+  select * from district where district_id=${districtId};`;
+  const dbresponse = await db.all(query);
   const change = formatDistrict(dbresponse);
-  response.send(change);
+  console.log(dbresponse.district_id);
+  response.send(dbresponse);
 });
 
 //API5 delecting delect with districtId
@@ -86,4 +99,34 @@ app.delete("/districts/:districtId/", async (request, response) => {
   const query = `delete from district where district_id=${districtId}`;
   const dbresponse = await db.run(query);
   response.send("District Removed");
+});
+
+//API6
+
+app.put("/districts/:districtId/", async (request, response) => {
+  const { districtId } = request.params;
+  const districtDetails = request.body;
+  const {
+    districtName,
+    stateId,
+    cases,
+    cured,
+    active,
+    deaths,
+  } = districtDetails;
+  const query = `update district set 
+  district_name="${districtName}",state_id=${stateId},cases=${cases},
+  cured=${cured},active=${active},deaths=${deaths}`;
+  const dbresponse = await db.run(query);
+  response.send("District Details Updated");
+});
+
+app.get("/states/:stateId/stats/", async (request, response) => {
+  const { stateId } = request.params;
+
+  const query = `
+  select * from district where state_id=${stateId};
+  `;
+  const dbresponse = await db.get(query);
+  response.send(dbresponse);
 });
