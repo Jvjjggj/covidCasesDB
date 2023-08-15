@@ -1,0 +1,13 @@
+GET http://localhost:4001/states/
+
+###
+
+GET http://localhost:4001/states/6
+
+###
+POST http://localhost:4001/districts/
+Content-Type: : application/json
+
+{
+    "Hi":"Hi"
+}
