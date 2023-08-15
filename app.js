@@ -70,7 +70,7 @@ const formatDistrict = function (i) {
   };
 };
 
-//Get district with DistrictId
+//API4 Get district with DistrictId
 app.get("/districts/:districtId/", async (request, response) => {
   const { districtId } = request.params;
   const query = `select * from district where district_id=${districtId}`;
@@ -82,9 +82,8 @@ app.get("/districts/:districtId/", async (request, response) => {
 //API5 delecting delect with districtId
 
 app.delete("/districts/:districtId/", async (request, response) => {
-  const distirctId = request.params;
-  //const query = `select * from district where district_id = ${distirctId};`;
-  //const dbresponse = await db.run(query);
-  const id = distirctId[distirctId];
-  response.send(id);
+  const { districtId } = request.params;
+  const query = `delete from district where district_id=${districtId}`;
+  const dbresponse = await db.run(query);
+  response.send("District Removed");
 });
