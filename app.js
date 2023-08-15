@@ -86,10 +86,9 @@ app.get("/districts/:districtId/", async (request, response) => {
   const { districtId } = request.params;
   const query = `
   select * from district where district_id=${districtId};`;
-  const dbresponse = await db.all(query);
+  const dbresponse = await db.get(query);
   const change = formatDistrict(dbresponse);
-  console.log(dbresponse.district_id);
-  response.send(dbresponse);
+  response.send(change);
 });
 
 //API5 delecting delect with districtId
@@ -121,12 +120,39 @@ app.put("/districts/:districtId/", async (request, response) => {
   response.send("District Details Updated");
 });
 
+//API 7
 app.get("/states/:stateId/stats/", async (request, response) => {
   const { stateId } = request.params;
 
   const query = `
-  select * from district where state_id=${stateId};
+  select
+    sum(cases) as totalCases,
+    sum(cured) as totalCured,
+    sum(active) as totalActive,
+    sum(deaths) as totalDeaths
+  from 
+     district
+  where 
+     state_id=${stateId};
   `;
   const dbresponse = await db.get(query);
   response.send(dbresponse);
 });
+
+//API 8
+app.get("/districts/:districtId/details/", async (request, response) => {
+  const { districtId } = request.params;
+  const getDistrictIdQuery = `
+    select state_id from district
+    where district_id = ${districtId};
+    `; //With this we will get the state_id using district table
+  const getDistrictIdQueryResponse = await db.get(getDistrictIdQuery);
+  const getStateNameQuery = `
+    select state_name as stateName from state
+    where state_id = ${getDistrictIdQueryResponse.state_id};
+    `; //With this we will get state_name as stateName using the state_id
+  const getStateNameQueryResponse = await db.get(getStateNameQuery);
+  response.send(getStateNameQueryResponse);
+}); //sending the required response
+
+module.exports = app;

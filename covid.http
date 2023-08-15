@@ -2,7 +2,7 @@ GET http://localhost:4001/states/
 ### 1
 
 
-GET http://localhost:4001/states/4
+GET http://localhost:4001/states/3
 ### 2
 POST http://localhost:4001/districts/
 Content-Type: application/json
@@ -18,10 +18,10 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:4001/districts/11/
+GET http://localhost:4001/districts/2/
 
 ###4
-DELETE http://localhost:4001/districts/10/
+DELETE http://localhost:4001/districts/11/
 ###5
 PUT http://localhost:4001/districts/11/
 Content-Type: application/json
@@ -37,6 +37,10 @@ Content-Type: application/json
 ### 6
 
 
-GET http://localhost:4001/states/4/stats/
+GET http://localhost:4001/states/3/stats/
 
 ### 7
+
+GET http://localhost:4001/districts/20/details/
+
+### 8
