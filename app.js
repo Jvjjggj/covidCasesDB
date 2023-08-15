@@ -51,9 +51,40 @@ app.get("/states/:stateId/", async (request, response) => {
   const change = format(dbresponse);
   response.send(change);
 });
-
+//Adding District
 app.post("/districts/", async (request, response) => {
   const districtDetails = request.body;
   //https://github.com/Jvjjggj/covidCasesDB.git
   response.send(districtDetails);
+});
+
+const formatDistrict = function (i) {
+  return {
+    districtId: i.district_id,
+    districtName: i.district_name,
+    stateId: i.state_id,
+    cases: i.cases,
+    cured: i.cured,
+    active: i.active,
+    deaths: i.deaths,
+  };
+};
+
+//Get district with DistrictId
+app.get("/districts/:districtId/", async (request, response) => {
+  const { districtId } = request.params;
+  const query = `select * from district where district_id=${districtId}`;
+  const dbresponse = await db.get(query);
+  const change = formatDistrict(dbresponse);
+  response.send(change);
+});
+
+//API5 delecting delect with districtId
+
+app.delete("/districts/:districtId/", async (request, response) => {
+  const distirctId = request.params;
+  //const query = `select * from district where district_id = ${distirctId};`;
+  //const dbresponse = await db.run(query);
+  const id = distirctId[distirctId];
+  response.send(id);
 });

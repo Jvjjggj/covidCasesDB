@@ -11,3 +11,10 @@ Content-Type: : application/json
 {
     "Hi":"Hi"
 }
+
+###
+
+GET http://localhost:4001/districts/322/
+
+###
+DELETE http://localhost:4001/districts/4/
